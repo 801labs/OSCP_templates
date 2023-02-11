@@ -12,6 +12,7 @@ url += `:${tp.frontmatter.current_port}`
 ## Directory discovery
 ```bash
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
+feroxbuster -u <% url %> -d 1 -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
 ```
 
 **If everything returns a 200 and almost everything is the same size, filter by response size**
