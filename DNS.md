@@ -1,4 +1,4 @@
-# DNS
+# DNS - <% tp.frontmatter.current_port %>
 
 ## Reverse lookup - different methods 
 **Note: IP should be of the machine you are looking to do a DNS lookup on**

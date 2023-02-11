@@ -1,4 +1,4 @@
-# MySQL
+# MySQL - <% tp.frontmatter.current_port %>
 
 ## Connecting
 ```bash

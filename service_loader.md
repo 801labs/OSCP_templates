@@ -1,7 +1,7 @@
- <%-* let ports = tp.frontmatter.ports.replace(/,\s*$/, "").split(',') -%>
+<%-* let ports = tp.frontmatter.ports.replace(/,\s*$/, "").split(',') -%>
 
 <%-* let playbook = {21:"FTP",22:"SSH",23:"Telnet",53:"DNS",80:"HTTP",161:"SNMP",162:"SNMP",
-443:"HTTP",445:"SMB",1433:"MSSQL",3306:"MySQL",3389:"RDP",6379:"Redis",8080:"HTTP"} -%>
+443:"HTTP",445:"SMB",1433:"MSSQL",3306:"MySQL",3389:"RDP",6379:"Redis",8080:"HTTP",2049:"NFS"} -%>
 
 <%-* let check_manually = ports.filter(n => !Object.keys(playbook).includes(String(n))) -%>
 <%-* if (check_manually.length > 0 ) { -%>
@@ -15,18 +15,24 @@
 <%*} -%>
 <%-* 
 let file_include = null
-ports.forEach(function (element) { 
-file_include = `[[Templates/${playbook[element]}]]`
-if (!file_include.includes('undefined')) {
-_%>
-<% tp.file.include(file_include) %>
-<%*}}) %>
-<%* let content = await tp.file.include("[[Templates/Commands]]") + "" %>
-<%* let file_exists = await tp.file.exists(tp.file.folder(true) + "/Commands.md") %>
+let port = null
+for (index in ports) {
+port = ports[index]
+file_include = `[[Templates/${playbook[port]}]]`
+tp.frontmatter.current_port = port
+if (!file_include.includes('undefined')) { _%>
+<%* let current_template = await tp.file.include(file_include) + "" -%>
+<% current_template -%>
+<%*}} -%>
+<%* let file_exists = await tp.file.exists(tp.file.folder(true) + "/Commands.md") -%>
 <%-* if (file_exists == false) { %>
-<% ( await tp.file.create_new(content, tp.file.folder(true) + "/Commands")).basename %>
-<%* } %>
-<%* let writeup_exists = await tp.file.exists(tp.file.folder(true) + "/Writeup.md") %>
-<%-* if (writeup_exists == false) { %>
-<% ( await tp.file.create_new("# Writeup", tp.file.folder(true) + "/Writeup")).basename %>
-<%* } %>
+<%* let content = await tp.file.include("[[Templates/Commands]]") + "" -%>
+<%- ( await tp.file.create_new(content, tp.file.folder(true) + "/Commands")).basename -%>
+<%-* } %>
+<%-* let files = ['Writeup', 'Notes']
+for (index in files) { 
+let extra_file = files[index]
+let extras_exists = await tp.file.exists(tp.file.folder(true) + `/${extra_file}.md`)
+if (extras_exists == false) { %>
+<%- (await tp.file.create_new(`# ${extra_file}`, tp.file.folder(true)+`/${extra_file}`)).basename -%>
+<%*}} %> 

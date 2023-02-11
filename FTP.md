@@ -1,4 +1,4 @@
-# FTP
+# FTP - <% tp.frontmatter.current_port %>
 ## Anonymous login
 ```bash
 ftp ftp://anonymous:anonymous@<% tp.frontmatter.target_ip %>

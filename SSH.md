@@ -1,4 +1,4 @@
-# SSH
+# SSH - <% tp.frontmatter.current_port %>
 
 ### Errors with SSH
 Error message: Unable to neotiate with <% tp.frontmatter.target_ip %> port 22: no matching key exchange method found. Their offer: diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1

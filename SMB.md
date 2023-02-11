@@ -1,8 +1,8 @@
-# SMB
+# SMB - <% tp.frontmatter.current_port %>
 
 #### Nmap
 ```nmap
-**nmap -p445 --script smb-vuln-* <% tp.frontmatter.target_ip %>
+nmap -p445 --script smb-vuln-* <% tp.frontmatter.target_ip %>
 ```
 
 #### SMBClient

@@ -7,3 +7,4 @@ OS: linux|windows
 is_ad: yes|no
 dc_ip: x.x.x.x
 ---
+<% await tp.file.rename("Services") -%>

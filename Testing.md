@@ -1,1 +1,0 @@
-<% tp.file.exists("/Templates/SMB.md") %>
