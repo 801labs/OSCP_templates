@@ -2,9 +2,7 @@
 alias: <% tp.file.title %>
 date: <% tp.date.now("YYYY-MM-DD", -1) %>
 platform: 
-difficulty:
 tags:
-status:
 my_ip: x.x.x.x
 target_ip: x.x.x.x
 ports: x,x,x
