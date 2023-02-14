@@ -10,6 +10,17 @@ nmap -p445 --script smb-vuln-* <% tp.frontmatter.target_ip %>
 smbclient -N -L //<% tp.frontmatter.target_ip %>
 ```
 
+#### Download all
+```bash
+#Download all
+smbclient //<% tp.frontmatter.target_ip %>/<share>
+> mask ""
+> recurse
+> prompt
+> mget *
+#Download everything to current directory
+```
+
 #### SMBMAP
 ```smbmap
 smbmap -H <% tp.frontmatter.target_ip %>
