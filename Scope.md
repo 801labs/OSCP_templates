@@ -8,8 +8,8 @@ OS: linux|windows
 is_ad: yes|no
 dc_ip: x.x.x.x
 ---
-<% await tp.file.rename("Services") -%>
-
+<%-* let file_name = `Services - ${tp.file.folder(false)}` -%>
+<% await tp.file.rename(file_name) -%>
 
 ---
 

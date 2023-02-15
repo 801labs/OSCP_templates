@@ -1,5 +1,3 @@
-# Enumeration
-
 <%-* let ports = tp.frontmatter.ports.replace(/,\s*$/, "").split(',') -%>
 
 <%-* let playbook = {21:"FTP",22:"SSH",23:"Telnet",53:"DNS",80:"HTTP",161:"SNMP",162:"SNMP",
@@ -26,15 +24,16 @@ if (!file_include.includes('undefined')) { _%>
 <%* let current_template = await tp.file.include(file_include) + "" -%>
 <% current_template -%>
 <%*}} -%>
-<%* let file_exists = await tp.file.exists(tp.file.folder(true) + "/Commands.md") -%>
+<%-* let file_name = tp.file.folder(false) -%>
+<%* let file_exists = await tp.file.exists(tp.file.folder(true) + `/Commands - ${file_name}.md`) -%>
 <%-* if (file_exists == false) { %>
 <%* let content = await tp.file.include("[[Templates/Commands]]") + "" -%>
-<%- ( await tp.file.create_new(content, tp.file.folder(true) + "/Commands")).basename -%>
+<%- ( await tp.file.create_new(content, tp.file.folder(true) +  `/Commands - ${file_name}.md`)).basename -%>
 <%-* } %>
 <%-* let files = ['Writeup', 'Notes']
 for (index in files) { 
 let extra_file = files[index]
-let extras_exists = await tp.file.exists(tp.file.folder(true) + `/${extra_file}.md`)
+let extras_exists = await tp.file.exists(tp.file.folder(true) + `/${file_name} - ${extra_file}.md`)
 if (extras_exists == false) { %>
-<%- (await tp.file.create_new(`# ${extra_file}`, tp.file.folder(true)+`/${extra_file}`)).basename -%>
+<%- (await tp.file.create_new(`# ${extra_file} - ${file_name} - `, tp.file.folder(true) + `/${extra_file} - ${file_name}.md`)).basename -%>
 <%*}} %> 
