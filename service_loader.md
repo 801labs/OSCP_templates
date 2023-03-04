@@ -33,7 +33,8 @@ if (!file_include.includes('undefined')) { _%>
 <%-* let files = ['Writeup', 'Notes']
 for (index in files) { 
 let extra_file = files[index]
-let extras_exists = await tp.file.exists(tp.file.folder(true) + `/${file_name} - ${extra_file}.md`)
+let extras_exists = await tp.file.exists(tp.file.folder(true) + `/${extra_file} - ${file_name}.md`)
+extras_exists
 if (extras_exists == false) { %>
 <%- (await tp.file.create_new(`# ${extra_file} - ${file_name}`, tp.file.folder(true) + `/${extra_file} - ${file_name}.md`)).basename -%>
 <%*}} %> 
