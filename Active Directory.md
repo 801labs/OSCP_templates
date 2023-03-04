@@ -1,20 +1,21 @@
 # Active Dirctory
+Extra attacks [Active Directory Attacks](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md)
 ## User Enum
 
 ### Enum4Linux
 ```bash
-enum4linux -U <% tp.frontmatter.dc_ip %>  | grep "user:" | awk -F'[][]' '{print $2}' > users
+enum4linux -U <% tp.frontmatter.dc_ip %>  | grep "user:" | awk -F'[][]' '{print $2}' | tee users
 ```
 
 ### RPCClient 
 **Null session**
 ```bash
-rpcclient -U "" -N <% tp.frontmatter.dc_ip %> -c 'enumdomusers' | awk -F'[][]' '{print $2}' > users
+rpcclient -U "" -N <% tp.frontmatter.dc_ip %> -c 'enumdomusers' | awk -F'[][]' '{print $2}' | tee users
 ```
 
 **If you would like all RIDs**
 ```bash
-rpcclient -U "" -N <% tp.frontmatter.dc_ip %> -c 'enumdomusers' | awk -F'[][]' '{print $4}' > RIDs
+rpcclient -U "" -N <% tp.frontmatter.dc_ip %> -c 'enumdomusers' | awk -F'[][]' '{print $4}' | tee RIDs
 ```
 
 **Query each user for additional information**

@@ -1,7 +1,7 @@
 <%-* let ports = tp.frontmatter.ports.replace(/,\s*$/, "").split(',') -%>
 
 <%-* let playbook = {21:"FTP",22:"SSH",23:"Telnet",53:"DNS",80:"HTTP",161:"SNMP",162:"SNMP",
-443:"HTTP",445:"SMB",1433:"MSSQL",3306:"MySQL",3389:"RDP",6379:"Redis",8080:"HTTP",2049:"NFS"} -%>
+443:"HTTP",445:"SMB",1433:"MSSQL",3306:"MySQL",3389:"RDP",5432:"Postgres",6379:"Redis",8080:"HTTP",2049:"NFS"} -%>
 
 <%-* let check_manually = ports.filter(n => !Object.keys(playbook).includes(String(n))) -%>
 <%-* if (check_manually.length > 0 ) { -%>
@@ -35,5 +35,5 @@ for (index in files) {
 let extra_file = files[index]
 let extras_exists = await tp.file.exists(tp.file.folder(true) + `/${file_name} - ${extra_file}.md`)
 if (extras_exists == false) { %>
-<%- (await tp.file.create_new(`# ${extra_file} - ${file_name} - `, tp.file.folder(true) + `/${extra_file} - ${file_name}.md`)).basename -%>
+<%- (await tp.file.create_new(`# ${extra_file} - ${file_name}`, tp.file.folder(true) + `/${extra_file} - ${file_name}.md`)).basename -%>
 <%*}} %> 
