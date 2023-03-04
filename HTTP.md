@@ -16,6 +16,11 @@ if (parseInt(tp.frontmatter.current_port) == 443) {
 	subdomain_fuzz += `:${tp.frontmatter.current_port}`
 }
 -%>
+## URL for browser
+```
+<% url %>
+```
+
 ## Directory discovery
 
 Get all headers
