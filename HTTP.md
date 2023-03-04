@@ -7,10 +7,13 @@ if ( tp.frontmatter.current_port  == undefined) {
 ### make sure look at EVERYTHING that comes back
 <%* 
 let url = `http://${tp.frontmatter.target_ip}`
+let subdomain_fuzz = `http://FUZZ.${tp.frontmatter.domain}`
 if (parseInt(tp.frontmatter.current_port) == 443) {
-url = url.replace('http', 'https')
+	url = url.replace('http', 'https')
+	subdomain_fuzz = url.replace('http', 'https')
 } else {
-url += `:${tp.frontmatter.current_port}`
+	url += `:${tp.frontmatter.current_port}`
+	subdomain_fuzz += `:${tp.frontmatter.current_port}`
 }
 -%>
 ## Directory discovery
@@ -20,6 +23,7 @@ Get all headers
 curl -I <% url %>
 ```
 
+Fuzz directories
 ```bash
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
 ```
@@ -55,6 +59,31 @@ ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-d
 ```bash
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -recursion -recursion-depth 2
 ```
+
+## Subdomain fuzzing
+
+vhost
+```bash
+ffuf -u <% url %> -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -H 'HOST: FUZZ.<% tp.frontmatter.domain %>'
+```
+
+requires something like [dnsmasq](https://www.tutorialspoint.com/unix_commands/dnsmasq.htm)or something similar 
+```bash
+ffuf -u <% subdomain_fuzz %> -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt
+```
+
+### HEAVY DUTY subdomain fuzzing
+has about significantly more domains in this list 
+vhost
+```bash
+ffuf -u <% url %> -w /usr/share/seclists/Discovery/DNS/dns-Jhaddix.txt -H 'HOST: FUZZ.<% tp.frontmatter.domain %>'
+```
+
+requires something like [dnsmasq](https://www.tutorialspoint.com/unix_commands/dnsmasq.htm)or something similar 
+```bash
+ffuf -u <% subdomain_fuzz %> -w /usr/share/seclists/Discovery/DNS/dns-Jhaddix.txt
+```
+
 
 ## Nikto
 **Basic nikto scan**
