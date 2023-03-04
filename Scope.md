@@ -11,7 +11,5 @@ dc_ip: x.x.x.x
 <%-* let file_name = `Services - ${tp.file.folder(false)}` -%>
 <% await tp.file.rename(file_name) -%>
 
----
 
-# Enumeration
 

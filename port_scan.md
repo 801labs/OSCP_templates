@@ -1,5 +1,5 @@
 # Information Gathering
-
+---
 ```bash
 sudo nmap -sS -p- -T4 <% tp.frontmatter.target_ip %> -oN <% tp.frontmatter.target_ip %>_syn.nmap -vvv -Pn
 ```

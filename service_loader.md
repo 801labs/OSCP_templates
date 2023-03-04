@@ -1,4 +1,6 @@
-<%-* let ports = tp.frontmatter.ports.replace(/,\s*$/, "").split(',') -%>
+# Enumeration
+---
+<%* let ports = tp.frontmatter.ports.replace(/,\s*$/, "").split(',') -%>
 
 <%-* let playbook = {21:"FTP",22:"SSH",23:"Telnet",53:"DNS",80:"HTTP",161:"SNMP",162:"SNMP",
 443:"HTTP",445:"SMB",1433:"MSSQL",3306:"MySQL",3389:"RDP",5432:"Postgres",6379:"Redis",8080:"HTTP",2049:"NFS"} -%>
