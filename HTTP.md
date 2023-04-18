@@ -95,3 +95,4 @@ ffuf -u <% subdomain_fuzz %> -w /usr/share/seclists/Discovery/DNS/dns-Jhaddix.tx
 ```bash
 nikto -h <% url %>
 ```
+
