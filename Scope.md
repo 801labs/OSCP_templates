@@ -1,5 +1,5 @@
 ---
-date: <% tp.date.now("YYYY-MM-DD", -1) %>
+date: <% tp.date.now("YYYY-MM-DD", 0) %>
 my_ip: x.x.x.x
 target_ip: x.x.x.x
 domain: domain.local
