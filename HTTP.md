@@ -7,6 +7,7 @@ if ( tp.frontmatter.current_port  == undefined) {
 ### make sure look at EVERYTHING that comes back
 <%* 
 let url = `http://${tp.frontmatter.target_ip}`
+let domain = `http://${tp.frontmatter.domain}`
 let subdomain_fuzz = `http://FUZZ.${tp.frontmatter.domain}`
 if (parseInt(tp.frontmatter.current_port) == 443) {
 	url = url.replace('http', 'https')
@@ -16,11 +17,18 @@ if (parseInt(tp.frontmatter.current_port) == 443) {
 	subdomain_fuzz += `:${tp.frontmatter.current_port}`
 }
 -%>
+## Add domain to hosts file
+```
+echo '<% tp.frontmatter.target_ip %> <% tp.frontmatter.domain %>' | sudo tee -a /etc/hosts
+```
 ## URL for browser
 ```
 <% url %>
 ```
 
+```
+<% domain %>
+```
 ## Directory discovery
 
 Get all headers
@@ -28,19 +36,33 @@ Get all headers
 curl -I <% url %>
 ```
 
+```bash
+curl -I <% domain %>
+```
+
 Fuzz directories
 ```bash
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
 ```
 
+```
+ffuf -u <% domain %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
+```
 **Feroxbuster**
 ```
 feroxbuster -u <% url %> -d 1 -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
 ```
 
+```
+feroxbuster -u <% domain %> -d 1 -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt
+```
 **Follow redirects**
 ```bash
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -r
+```
+
+```
+ffuf -u <% domain %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -r
 ```
 
 **If everything returns a 200 and almost everything is the same size, filter by response size**
@@ -48,9 +70,17 @@ ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-d
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -fs <size>
 ```
 
+```
+ffuf -u <% domain %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -fs <size>
+```
+
 **Filter on number of words**
 ```bash
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -fw <num of words>
+```
+
+```
+ffuf -u <% domain %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -fw <num of words>
 ```
 
 **Adding file extensions**
@@ -59,12 +89,19 @@ ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-d
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -e <ext>
 ```
 
+```
+ffuf -u <% domain %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -e <ext>
+```
+
 **Recursive search**
 **You can adjust the depth by changing the variable**
 ```bash
 ffuf -u <% url %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -recursion -recursion-depth 2
 ```
 
+```
+ffuf -u <% domain %>/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -recursion -recursion-depth 2
+```
 ## Subdomain fuzzing
 
 vhost
@@ -89,10 +126,12 @@ requires something like [dnsmasq](https://www.tutorialspoint.com/unix_commands/d
 ffuf -u <% subdomain_fuzz %> -w /usr/share/seclists/Discovery/DNS/dns-Jhaddix.txt
 ```
 
-
 ## Nikto
 **Basic nikto scan**
 ```bash
 nikto -h <% url %>
 ```
 
+```bash
+nikto -h <% domain %>
+```
