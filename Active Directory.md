@@ -1,5 +1,10 @@
 # Active Directory
 Extra attacks [Active Directory Attacks](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md)
+<%-*
+if ( tp.frontmatter.dc_ip  === "x.x.x.x") {
+	tp.frontmatter.dc_ip = await tp.system.prompt('Enter Domain IP address: ')
+}
+%>
 ## User Enum
 
 ### Enum4Linux

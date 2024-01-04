@@ -1,5 +1,15 @@
 # Enumeration
 ---
+<%-*
+if ( tp.frontmatter.domain  === "domain.local") {
+	tp.frontmatter.domain = await tp.system.prompt('Enter Domain: ')
+}
+// Let's make sure it isn't just blank
+if ( tp.frontmatter.domain  === "") {
+	tp.frontmatter.domain = "domain.local"
+}
+-%>
+
 <%* let ports = tp.frontmatter.ports.replace(/,\s*$/, "").split(',') -%>
 
 <%-* let playbook = {21:"FTP",22:"SSH",23:"Telnet",53:"DNS",80:"HTTP",161:"SNMP",162:"SNMP",
