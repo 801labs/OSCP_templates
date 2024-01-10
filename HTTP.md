@@ -12,6 +12,7 @@ let subdomain_fuzz = `http://FUZZ.${tp.frontmatter.domain}`
 if (parseInt(tp.frontmatter.current_port) == 443) {
 	url = url.replace('http', 'https')
 	subdomain_fuzz = url.replace('http', 'https')
+	 domain = domain.replace('http','https')
 } else {
 	url += `:${tp.frontmatter.current_port}`
 	subdomain_fuzz += `:${tp.frontmatter.current_port}`
