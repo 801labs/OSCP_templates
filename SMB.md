@@ -17,7 +17,7 @@ if (parseInt(tp.frontmatter.current_port) != 445) {
 -%>
 #### Nmap
 ```nmap
-nmap -p<% tp.frontmatter.current_port %> --script smb-vuln-* <% tp.frontmatter.target_ip %>
+nmap -p<% tp.frontmatter.current_port %> --script "smb-vuln-*" <% tp.frontmatter.target_ip %>
 ```
 
 #### SMBClient
