@@ -252,33 +252,38 @@ foreach ($dir in @($obsDir, $pluginsDir)) {
 
 Write-OK "All .obsidian config files written"
 
-# ─── Clone repo (no .git metadata) ──────────────────────────────────────────
-Write-Step "Cloning 801labs/OSCP_templates (shallow, no .git)"
+# ─── Sparse-clone only the Templates/ folder from repo ───────────────────────
+Write-Step "Cloning Templates/ folder from 801labs/OSCP_templates"
 
 $repoUrl  = "https://github.com/801labs/OSCP_templates.git"
 $tmpClone = Join-Path $env:TEMP "oscp_templates_$(Get-Random)"
 
 try {
-    git clone --depth 1 --quiet $repoUrl $tmpClone
+    # Sparse clone: fetch only the Templates/ subdirectory (no blobs initially, then set sparse path)
+    git clone --depth 1 --filter=blob:none --sparse --quiet $repoUrl $tmpClone
+    git -C $tmpClone sparse-checkout set Templates
 
-    # Copy everything except the .git directory into vault/Templates/
-    $templatesDir = Join-Path $WorkspacePath "Templates"
-    if (-not (Test-Path $templatesDir)) {
-        New-Item -ItemType Directory -Path $templatesDir -Force | Out-Null
-    }
-    Get-ChildItem -Path $tmpClone -Force |
-        Where-Object { $_.Name -ne ".git" } |
-        ForEach-Object {
-            $dest = Join-Path $templatesDir $_.Name
+    $srcTemplates = Join-Path $tmpClone "Templates"
+    if (Test-Path $srcTemplates) {
+        $destTemplates = Join-Path $WorkspacePath "Templates"
+        if (-not (Test-Path $destTemplates)) {
+            New-Item -ItemType Directory -Path $destTemplates -Force | Out-Null
+        }
+        # Copy contents of repo's Templates/ into vault's Templates/
+        Get-ChildItem -Path $srcTemplates -Force | ForEach-Object {
+            $dest = Join-Path $destTemplates $_.Name
             if ($_.PSIsContainer) {
                 Copy-Item -Path $_.FullName -Destination $dest -Recurse -Force
             } else {
                 Copy-Item -Path $_.FullName -Destination $dest -Force
             }
         }
-    Write-OK "Repository content copied to vault/Templates/"
+        Write-OK "Templates/ copied to vault root"
+    } else {
+        Write-Warn "Templates/ folder not found in repo after sparse checkout"
+    }
 } catch {
-    Write-Warn "Could not clone repository: $_`nManually clone https://github.com/801labs/OSCP_templates into $WorkspacePath\Templates"
+    Write-Warn "Could not clone repository: $_`nManually copy the Templates/ folder from https://github.com/801labs/OSCP_templates into $WorkspacePath\Templates"
 } finally {
     if (Test-Path $tmpClone) {
         Remove-Item $tmpClone -Recurse -Force -ErrorAction SilentlyContinue

@@ -244,22 +244,26 @@ write_if_missing "$OBS_DIR/templates.json" '{
 
 ok "All .obsidian config files written"
 
-# ─── Clone repo (no .git metadata) ──────────────────────────────────────────
-step "Cloning 801labs/OSCP_templates (shallow, no .git)"
+# ─── Sparse-clone only the Templates/ folder from repo ───────────────────────
+step "Cloning Templates/ folder from 801labs/OSCP_templates"
 
 REPO_URL="https://github.com/801labs/OSCP_templates.git"
 TMP_CLONE="$(mktemp -d /tmp/oscp_templates_XXXXXX)"
 
 clone_ok=false
-if git clone --depth 1 --quiet "$REPO_URL" "$TMP_CLONE" 2>/dev/null; then
-    # Copy into vault/Templates/ (no .git)
-    mkdir -p "$VAULT_PATH/Templates"
-    rsync -a --exclude='.git' "$TMP_CLONE/" "$VAULT_PATH/Templates/" 2>/dev/null \
-        || { cp -r "$TMP_CLONE"/. "$VAULT_PATH/Templates/"; rm -rf "$VAULT_PATH/Templates/.git" 2>/dev/null || true; }
-    clone_ok=true
-    ok "Repository content copied to vault/Templates/"
+if git clone --depth 1 --filter=blob:none --sparse --quiet "$REPO_URL" "$TMP_CLONE" 2>/dev/null \
+    && git -C "$TMP_CLONE" sparse-checkout set Templates 2>/dev/null; then
+    # Copy the Templates/ subdirectory into the vault root as Templates/
+    if [[ -d "$TMP_CLONE/Templates" ]]; then
+        rsync -a "$TMP_CLONE/Templates/" "$VAULT_PATH/Templates/" 2>/dev/null \
+            || cp -r "$TMP_CLONE/Templates/." "$VAULT_PATH/Templates/"
+        clone_ok=true
+        ok "Templates/ copied to vault root"
+    else
+        warn "Templates/ folder not found in repo after sparse checkout"
+    fi
 else
-    warn "Could not clone repository. Manually clone $REPO_URL into $VAULT_PATH/Templates"
+    warn "Could not clone repository. Manually copy the Templates/ folder from $REPO_URL into $VAULT_PATH/Templates"
 fi
 rm -rf "$TMP_CLONE"
 
